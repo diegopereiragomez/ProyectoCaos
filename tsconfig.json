@@ -1,5 +1,15 @@
 {
+  // codigo inicial
   "extends": "astro/tsconfigs/strict",
-  "include": [".astro/types.d.ts", "**/*"],
-  "exclude": ["dist"]
+  "include": [".astro/types.d.ts","**/*"],
+  "exclude": ["dist"],
+
+  // Añadido sobre el codigo inicial
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@cv":["./cv.json"],
+      "@*": ["src/*"]
+    }
+  }
 }

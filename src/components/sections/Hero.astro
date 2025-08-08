@@ -1,0 +1,159 @@
+---
+import { basics } from "@cv";
+import Section from "@components/Section.astro";
+import Mail from "@icons/envelope.svg";
+import Facebook from "@icons/facebook.svg";
+import Linkedin from "@icons/linkedin.svg";
+import Github from "@icons/github.svg";
+import Telefono from "@icons/phone.svg";
+import Globo from "@icons/globe2.svg";
+
+const { nombre, label, image, email, phone, location, profiles } = basics;
+const { city, region } = location;
+// const {network, url} = profiles;
+
+const SOCIAL_ICONS: Record<string, any> = {
+    Github,
+    Linkedin,
+    Facebook,
+};
+
+const linked = profiles.find(({ network }) => (network = "LinkeDin"));
+const linkedurl = linked?.url;
+
+const printinfo = [email, phone, linkedurl].filter(Boolean).join("|");
+---
+
+<Section title="Hero">
+    <div class="container">
+        <div class="info">
+            <h1>{nombre}</h1>
+            <h2>{label}</h2>
+            <span>
+                <Globo />
+                {city}, {region}
+            </span>
+            <footer>
+                <div class="print">
+                    {email}|{phone}|{linkedurl}
+                </div>
+                {
+                    email && (
+                        <a
+                            href={`mailto:${email}`}
+                            title={`envia un correo a ${nombre} a ${email}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <Mail />
+                        </a>
+                    )
+                }
+                {
+                    phone && (
+                        <a
+                            href={`tel:${phone}`}
+                            title={`llamara por telefono a ${nombre} a ${phone}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            <Telefono />
+                        </a>
+                    )
+                }{
+                    profiles.map(({ network, url, username }) => {
+                        const Icon = SOCIAL_ICONS[network];
+                        return (
+                            <a
+                                href={url}
+                                title={`llamara por telefono a ${nombre} a ${username}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                <Icon />
+                            </a>
+                        );
+                    })
+                }
+            </footer>
+        </div>
+        <figure>
+            <img src={image} alt={nombre} />
+        </figure>
+    </div>
+</Section>
+
+<style>
+    h1 {
+        font-size: 2rem;
+    }
+    h2 {
+        color: #444;
+        font-weight: 500;
+        font-size: 1rem;
+        text-wrap: balance;
+    }
+    img {
+        aspect-ratio: 1/1;
+        object-fit: cover;
+        width: 120px;
+        border-radius: 16px;
+    }
+    span {
+        color: #666;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        font-size: 0.85rem;
+        /* letter-spacing: -0.5rem; */
+    }
+    footer {
+        display: flex;
+        gap: 4px;
+        margin-top: 1px;
+        font-size: 0.65rem;
+
+        & a {
+            color: #777;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #eee;
+            padding: 1px;
+            height: 12px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        & a:hover {
+            background: #eee;
+            border: 1px solid #eee;
+        }
+    }
+    .container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+    .info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.05rem;
+        padding-right: 32px;
+    }
+    .print {
+        display: none;
+    }
+    
+    @media print {
+        .print {
+            display: block;
+        }
+
+        footer a{
+            display: none;
+        }
+    }
+</style>
